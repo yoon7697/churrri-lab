@@ -1,0 +1,13 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {createContactHandler} from '../api/contact.js';
+const body={name:'테스트',email:'teacher@example.com',subject:'교실 아이디어',message:'새로운 교실 도구를 제안합니다.',website:''};
+function request(data=body){return {method:'POST',headers:{host:'churrri-lab.vercel.app',origin:'https://churrri-lab.vercel.app','content-type':'application/json','x-forwarded-for':'test-ip'},body:data};}
+function response(){return {code:200,headers:{},setHeader(k,v){this.headers[k]=v;},status(s){this.code=s;return this;},json(d){this.body=d;return this;}};}
+test('연결 설정 없으면 성공 표시 없이 503 안내',async()=>{const res=response();await createContactHandler({env:{}})(request(),res);assert.equal(res.code,503);assert.equal(res.body.code,'NOT_CONFIGURED');});
+test('수신자는 고정되고 방문자 이메일은 Reply-To로 사용',async()=>{let mail;const h=createContactHandler({env:{NAVER_SMTP_PASSWORD:'mock-only'},sendMail:async m=>{mail=m;return {accepted:['yoon76971@naver.com']};}});const res=response();await h(request({...body,to:'attacker@example.com'}),res);assert.equal(res.code,200);assert.equal(mail.to,'yoon76971@naver.com');assert.equal(mail.from.address,'yoon76971@naver.com');assert.equal(mail.replyTo.address,body.email);assert.match(mail.text,/교실 도구/);const repeat=response();await h(request(),repeat);assert.equal(repeat.code,429);});
+test('메일 서버 실패 시 성공으로 표시하지 않음',async()=>{const res=response();await createContactHandler({env:{NAVER_SMTP_PASSWORD:'mock-only'},sendMail:async()=>{throw new Error('mock');}})(request(),res);assert.equal(res.code,502);assert.equal(res.body.ok,false);});
+test('메일 서버가 수신자를 거절하면 실패 처리',async()=>{const res=response();await createContactHandler({env:{NAVER_SMTP_PASSWORD:'mock-only'},sendMail:async()=>({accepted:[]})})(request(),res);assert.equal(res.code,502);});
+test('입력 검증 및 헤더 삽입 방지',async()=>{for(const invalid of [{...body,email:'wrong'},{...body,subject:'bad\r\nBcc: x@y.com'},{...body,message:'x'},{...body,message:'x'.repeat(5001)},{...body,website:'spam'},{...body,email:['not a string']}]){const res=response();await createContactHandler({env:{}})(request(invalid),res);assert.equal(res.code,400);}});
+test('외부 origin 요청과 GET 거부',async()=>{const h=createContactHandler({env:{}});const req=request();req.headers.origin='https://other.example';let res=response();await h(req,res);assert.equal(res.code,403);req.method='GET';res=response();await h(req,res);assert.equal(res.code,405);});
+test('거대한 요청 거절',async()=>{const res=response();await createContactHandler({env:{}})(request({...body,extra:'x'.repeat(18000)}),res);assert.equal(res.code,413);});
