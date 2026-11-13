@@ -24,16 +24,8 @@ updateTools();
 const contactForm = document.querySelector('#contactForm');
 const statusLine = document.querySelector('#contactStatus');
 const sendButton = document.querySelector('#sendIdea');
-const mailFallback = document.querySelector('#mailFallback');
 const emailAddress = 'yoon76971@naver.com';
 let contactBusy = false;
-function updateMailLink(){
- const fields = new FormData(contactForm);
- const subject = String(fields.get('subject') || 'CHURRRI’S LAB 아이디어');
- const body = `이름: ${fields.get('name') || '미기재'}\n답장 이메일: ${fields.get('email') || ''}\n\n${fields.get('message') || ''}`;
- mailFallback.href = `mailto:${emailAddress}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-contactForm.addEventListener('input', updateMailLink);
 document.querySelector('#copyEmail').addEventListener('click', async event=>{
  const button=event.currentTarget;
  try{await navigator.clipboard.writeText(emailAddress);button.textContent='복사했어요';}
@@ -46,22 +38,22 @@ contactForm.addEventListener('submit', async event=>{
  statusLine.textContent='메일을 보내고 있어요. 잠시만 기다려 주세요.';
  statusLine.dataset.state='pending';
  const data=Object.fromEntries(new FormData(contactForm));
- updateMailLink();
+ 
  const controller=new AbortController();
  const timeout=setTimeout(()=>controller.abort(),25000);
  try{
   const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:controller.signal});
   const result=await response.json().catch(()=>({}));
   if(!response.ok || !result.ok){
-   const message=result.code==='NOT_CONFIGURED'?'사이트 메일 연결을 준비 중이에요. 아래 ‘메일 앱으로 직접 보내기’를 이용해 주세요.':result.message || '지금은 전송하지 못했어요. 잠시 후 다시 시도하거나 아래 메일 앱을 이용해 주세요.';
+   const message=result.code==='NOT_CONFIGURED'?'현재 문의 전송을 준비 중이에요. 잠시 후 다시 이용해 주세요.':result.message || '지금은 전송하지 못했어요. 입력한 내용은 유지되니 잠시 후 다시 시도해 주세요.';
    throw new Error(message);
   }
   statusLine.dataset.state='success';
   statusLine.textContent='메일 전송을 접수했어요. 소중한 의견 감사합니다!';
-  contactForm.reset();updateMailLink();
+  contactForm.reset();
  }catch(error){
   statusLine.dataset.state='error';
-  statusLine.textContent=error.name==='AbortError'?'전송 결과를 확인하지 못했어요. 중복 전송을 피하려면 잠시 기다린 후 다시 확인해 주세요.':error instanceof TypeError?'서버에 연결하지 못했어요. 인터넷 연결을 확인하거나 아래 메일 앱을 이용해 주세요.':error.message;
+  statusLine.textContent=error.name==='AbortError'?'전송 결과를 확인하지 못했어요. 중복 전송을 피하려면 잠시 기다린 후 다시 확인해 주세요.':error instanceof TypeError?'서버에 연결하지 못했어요. 인터넷 연결을 확인한 후 다시 시도해 주세요.':error.message;
  }finally{
   clearTimeout(timeout);contactBusy=false;sendButton.disabled=false;sendButton.innerHTML='전송하기 <span aria-hidden="true">→</span>';
  }
