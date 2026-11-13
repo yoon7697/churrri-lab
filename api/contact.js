@@ -22,7 +22,7 @@ export function createContactHandler({env=process.env,sendMail,now=Date.now}={})
   if([name,email,subject,message].some(value=>typeof value!=='string'))return fail(400,'INPUT','입력 내용을 확인해 주세요.');
   if(name.length>60||email.length>254||subject.length>120||message.length>5000||message.trim().length<5||!subject.trim()||!EMAIL.test(email.trim())||/[\r\n]/.test(name+subject))return fail(400,'INPUT','이메일, 제목, 내용을 다시 확인해 주세요.');
   const user=env.SMTP_USER||RECIPIENT;
-  if(!env.NAVER_SMTP_PASSWORD || !EMAIL.test(user))return fail(503,'NOT_CONFIGURED','메일 연결을 준비 중이에요. 메일 앱으로 직접 보내기를 이용해 주세요.');
+  if(!env.NAVER_SMTP_PASSWORD || !EMAIL.test(user))return fail(503,'NOT_CONFIGURED','현재 문의 전송을 준비 중이에요. 잠시 후 다시 이용해 주세요.');
   const timestamp=now();
   // 서버 인스턴스 단위의 기본 중복 방지입니다. 분산 봇 차단을 대체하지 않습니다.
   for(const [key,time] of recent)if(timestamp-time>=60000)recent.delete(key);
@@ -41,7 +41,7 @@ export function createContactHandler({env=process.env,sendMail,now=Date.now}={})
    if(!result?.accepted?.some(address=>String(address).toLowerCase()===RECIPIENT))throw new Error('Recipient not accepted');
    return res.status(200).json({ok:true});
   }catch{
-   return fail(502,'SEND_FAILED','메일 전송 결과를 확인하지 못했어요. 잠시 후 다시 시도하거나 메일 앱을 이용해 주세요.');
+   return fail(502,'SEND_FAILED','메일 전송 결과를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.');
   }
  };
 }
