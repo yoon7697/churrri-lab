@@ -14,3 +14,8 @@
 .pillar strong{font-size:14px}
 .pillar span{font-size:11px;line-height:1.65;color:var(--muted)}
 @media(max-width:760px){.pillar-intro{display:block}.pillar-intro p{margin-top:6px}.pillar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pillar{padding:14px 12px}.pillar b{font-size:10px}.pillar strong{font-size:13px}.pillar span{font-size:10px}}
+
+/* RRRI blue accent matches the hero heading (sampled #127dc1). */
+.filter .filter-en{color:#127dc1;font-size:inherit;margin-left:0;opacity:1;letter-spacing:.15px}
+.filter.active .filter-en{color:#fff}
+.pillar b,.pillar-intro>span{color:#127dc1}
