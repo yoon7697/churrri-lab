@@ -2,3 +2,15 @@
 
 /* v1.2 — 소개 및 아이디어 메일 */
 #about-title{font-size:clamp(17px,2vw,21px);line-height:1.55}.about-strip>div{min-width:0}.about-strip>.text-button{flex-shrink:0}.profile-heading{font-size:25px;line-height:1.55}dialog .education{margin-top:24px;border-top:1px solid var(--line);padding-top:19px;font-weight:700;color:#30759f}#contactDialog{max-width:630px}#contactDialog h2{font-size:25px}.email-address{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#eaf6ff;border-radius:9px;padding:12px 14px;margin-bottom:21px;font-size:12px}.email-address>span{color:var(--muted);font-size:10px}.email-address>a{color:#1579b4;font-weight:700}.email-address button{font-size:10px;color:#36769f;background:#fff;border:1px solid #cce4f4;border-radius:5px;padding:6px 9px;margin-left:auto}#contactForm label{display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:700;margin-bottom:16px}#contactForm input,#contactForm textarea{width:100%;border:1px solid #cadeee;background:white;border-radius:7px;padding:11px 12px;color:var(--ink);font-size:13px;line-height:1.7;font-family:inherit;resize:vertical;letter-spacing:0}#contactForm input::placeholder,#contactForm textarea::placeholder{color:#91a7b8;font-weight:400}.form-row{display:grid;grid-template-columns:1fr 1.4fr;gap:15px}.optional{font-size:10px;font-weight:400;color:#8aa2b6}.privacy-note,.mail-fallback-note{font-size:10px;line-height:1.8;color:#7891a5}.honey-field{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}#contactStatus{font-size:12px;line-height:1.8;margin-top:14px}#contactStatus[data-state=success]{color:#167659}#contactStatus[data-state=error]{color:#b34e36}#contactForm .dialog-cta{margin-top:15px}#contactForm button:disabled{opacity:.65;cursor:wait}#mailFallback{margin-top:8px}.filters{row-gap:8px}@media(max-width:760px){.form-row{grid-template-columns:1fr;gap:0}.profile-heading{font-size:22px}.email-address{gap:7px}#contactDialog h2{font-size:22px}.about-strip>.text-button{margin-left:0}.filters{gap:7px}.filter{padding:9px 12px}}
+
+/* RRRI — four product families */
+.pillars{padding:0 0 26px}
+.pillar-intro{display:flex;justify-content:space-between;align-items:baseline;gap:15px;margin-bottom:12px}
+.pillar-intro>span{font:700 10px/1.4 Arial,sans-serif;letter-spacing:1.5px;color:var(--blue)}
+.pillar-intro p{font-size:11px;line-height:1.6;color:var(--muted)}
+.pillar-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pillar{display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0;padding:17px 16px;border:1px solid var(--line);background:#ffffffae;border-radius:11px}
+.pillar b{font-size:11px;letter-spacing:.2px;color:var(--blue)}
+.pillar strong{font-size:14px}
+.pillar span{font-size:11px;line-height:1.65;color:var(--muted)}
+@media(max-width:760px){.pillar-intro{display:block}.pillar-intro p{margin-top:6px}.pillar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pillar{padding:14px 12px}.pillar b{font-size:10px}.pillar strong{font-size:13px}.pillar span{font-size:10px}}
