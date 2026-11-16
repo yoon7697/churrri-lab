@@ -16,5 +16,4 @@
 @media(max-width:760px){.pillar-intro{display:block}.pillar-intro p{margin-top:6px}.pillar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pillar{padding:14px 12px}.pillar b{font-size:10px}.pillar strong{font-size:13px}.pillar span{font-size:10px}}
 
 
-/* Brand RRRI letters use the same blue as the hero “도구들.” */
-.topbar .brand .brand-rrri{color:var(--blue)}
+
